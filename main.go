@@ -2,22 +2,30 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"net/http"
 )
 
 func main() {
-	num := []int{1, 2, 3, 4, 5}
 
-	fmt.Println("length of the array is ", len(num))
-	fmt.Println("capacity of the array is ", cap(num))
+	fmt.Println("running a server")
+	res, err := http.Get("https://jsonplaceholder.typicode.com/todos/1")
+	if err != nil {
+		fmt.Println("Getting error while fetching data from API", err)
+		return
+	}
 
-	num = append(num, 6)
+	defer res.Body.Close()
+	fmt.Println("Response received from API", res)
 
-	fmt.Println("length of the array is ", len(num))
-	fmt.Println("capacity of the array is ", cap(num))
+	//read the data from res.Body
+
+	data, err := io.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println("Error while reading data from response body", err)
+		return
+	}
+
+	fmt.Println("Data from API is", string(data))
 
 }
-
-// boring breaks
-// do one thing at a time like only eat while eating
-// don't use phone for the first 3 hours after waking up
-// dopamine stackinng - use it for adding hard work task with fun task
